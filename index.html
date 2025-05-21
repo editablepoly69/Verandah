@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taste of India - Lusaka, Zambia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #222;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .menu-category-title {
+            border-bottom: 3px solid #e5e7eb;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+        }
+        .menu-item-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            overflow: hidden;
+            position: relative;
+            display: flex; /* Added for consistent card height */
+            flex-direction: column; /* Added for consistent card height */
+        }
+        .menu-item-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        .menu-item-content { /* Added for consistent card height */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .price-tag {
+            background-color: #FF6347;
+            color: white;
+            font-weight: 800;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .image-container { /* Renamed from image-loading-overlay's parent for clarity */
+            position: relative;
+            width: 100%;
+            height: 18rem; /* Fixed height for image container */
+            background-color: #e2e8f0; /* Placeholder bg */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+        .image-container img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover; /* Ensures image covers the area */
+             border-top-left-radius: 0.75rem;
+             border-top-right-radius: 0.75rem;
+        }
+        .spinner-container { /* Centered spinner */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5; /* Ensure it's above the image placeholder but below image once loaded */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #FF6347;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .category-grid { /* To be populated by JS */
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid */
+            gap: 2rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <header class="bg-gradient-to-r from-orange-500 to-red-600 text-white p-6 shadow-xl rounded-b-3xl">
+        <div class="container mx-auto text-center">
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-3 tracking-wide">Taste of India</h1>
+            <p class="text-xl md:text-3xl font-light italic">Come Hungry, Leave Whole, With Love</p>
+            <p class="text-md md:text-lg mt-2 font-medium">Lusaka, Zambia - Where Flavors Ignite!</p>
+        </div>
+    </header>
+
+    <nav class="bg-gray-900 sticky top-0 z-10 shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex flex-wrap justify-center space-x-3 md:space-x-6 text-sm md:text-base">
+            <a href="#snacks" class="text-gray-100 hover:text-white px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:bg-red-700 font-medium">Snacks</a>
+            <a href="#hot-pan" class="text-gray-100 hover:text-white px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:bg-red-700 font-medium">Hot Pan</a>
+            <a href="#sweet-memories" class="text-gray-100 hover:text-white px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:bg-red-700 font-medium">Sweet Memories</a>
+            <a href="#tiffin-box" class="text-gray-100 hover:text-white px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:bg-red-700 font-medium">Tiffin Box</a>
+            <a href="#sips-brews" class="text-gray-100 hover:text-white px-4 py-2 rounded-lg transition duration-300 ease-in-out hover:bg-red-700 font-medium">Sips & Brews</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="snacks" class="mb-16">
+            <h2 class="menu-category-title text-3xl md:text-5xl font-extrabold mb-6 pb-2 text-center uppercase">SNACKS / नाश्ता</h2>
+            <p class="text-center text-gray-700 text-lg mb-10 italic font-semibold">Crunchy, tangy, sweet, spicy – a symphony of sharable bites straight from the vibrant streets of India!</p>
+            <div class="category-grid">
+                <p class="col-span-full text-center text-gray-600">Loading snacks...</p>
+            </div>
+        </section>
+
+        <section id="hot-pan" class="mb-16">
+            <h2 class="menu-category-title text-3xl md:text-5xl font-extrabold mb-6 pb-2 text-center uppercase">HOT PAN / गर्म गर्म तवा</h2>
+            <p class="text-center text-gray-700 text-lg mb-10 italic font-semibold">Freshly made, irresistibly crispy, and fluffy delights infused with bold South Indian flavors!</p>
+            <div class="category-grid">
+                <p class="col-span-full text-center text-gray-600">Loading hot pan items...</p>
+            </div>
+        </section>
+
+        <section id="sweet-memories" class="mb-16">
+            <h2 class="menu-category-title text-3xl md:text-5xl font-extrabold mb-6 pb-2 text-center uppercase">SWEET MEMORIES / मिठाई</h2>
+            <p class="text-center text-gray-700 text-lg mb-10 italic font-semibold">Delicious Indian sweets and baked delights made with pure sweetness, rich ghee, and a touch of love!</p>
+            <div class="category-grid">
+                <p class="col-span-full text-center text-gray-600">Loading sweets...</p>
+            </div>
+        </section>
+
+        <section id="tiffin-box" class="mb-16">
+            <h2 class="menu-category-title text-3xl md:text-5xl font-extrabold mb-6 pb-2 text-center uppercase">TIFFIN BOX / तिफन</h2>
+            <p class="text-center text-gray-700 text-lg mb-10 italic font-semibold">For when school tiffin nostalgia hits... Homemade meals ready to go, packed with love and flavor!</p>
+            <div class="category-grid">
+                <p class="col-span-full text-center text-gray-600">Loading tiffin items...</p>
+            </div>
+        </section>
+
+        <section id="sips-brews" class="mb-16">
+            <h2 class="menu-category-title text-3xl md:text-5xl font-extrabold mb-6 pb-2 text-center uppercase">SIPS & BREWS / चुस्किया</h2>
+            <p class="text-center text-gray-700 text-lg mb-10 italic font-semibold">Freshly brewed, artfully made, hot or cold, with love and grace – perfect sips to complement your meal!</p>
+            <div class="category-grid">
+                <p class="col-span-full text-center text-gray-600">Loading drinks...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-white p-6 text-center rounded-t-3xl mt-12">
+        <div class="container mx-auto">
+            <p class="text-lg font-medium">&copy; 2025 Taste of India. All rights reserved.</p>
+            <p class="text-sm mt-3">Designed with ❤️ for delicious moments in Lusaka, Zambia.</p>
+        </div>
+    </footer>
+
+    <script>
+        // !!! IMPORTANT: Paste your Google Apps Script Web App URL here!
+        const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbx41WrBdeBkAnE4Qj-pqVhczFZfN2NytDXkBus_7bWGESCo5LjsTw9LGu4DKKe3k4_Y/exec';
+
+        // Utility function for a simple delay
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Function to generate and set an image for a given img element with retries
+        async function generateAndSetImage(imgElement, dishName, dishDescription) {
+            const loadingOverlay = imgElement.parentElement.querySelector('.spinner-container');
+
+            // Display loading indicator
+            if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+            imgElement.classList.add('hidden'); // Hide the image until loaded
+
+            const prompt = `A mouth-watering, highly detailed, professional food photography shot of ${dishName}, which is described as: "${dishDescription}". The image should evoke a strong desire to eat the food, with vibrant colors and excellent lighting. Focus on the deliciousness of the dish. Ensure the background is simple or restaurant-like.`;
+
+            const maxRetries = 3;
+            const retryDelayMs = 1000; // Keep this reasonable for user experience
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    console.log(`Attempt ${i + 1} to generate image for: ${dishName}`);
+                    const payload = {
+                        instances: { prompt: prompt },
+                        parameters: { "sampleCount": 1 }
+                    };
+                    // >>>>>>>>>>>>> IMPORTANT CHANGE HERE <<<<<<<<<<<<<
+                    // Replace "YOUR_ACTUAL_GOOGLE_CLOUD_API_KEY_HERE" with your actual API key
+                    const apiKey = "YOUR_ACTUAL_GOOGLE_CLOUD_API_KEY_HERE"; 
+                    // If running in the Canvas environment, leave it as const apiKey = "";
+                    // Canvas will inject the key automatically.
+                    // For local testing, you MUST provide your own key.
+                    // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                        const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                        imgElement.src = imageUrl;
+                        imgElement.classList.remove('hidden');
+                        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+                        console.log(`Image generated successfully for: ${dishName} on attempt ${i + 1}`);
+                        return;
+                    } else {
+                        console.warn(`Image generation failed on attempt ${i + 1} for: ${dishName}. Response status: ${response.status}, Result:`, result);
+                        if (i < maxRetries - 1) {
+                            await sleep(retryDelayMs);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error on attempt ${i + 1} generating image for ${dishName}:`, error);
+                    if (i < maxRetries - 1) {
+                        await sleep(retryDelayMs);
+                    }
+                }
+            }
+
+            console.error(`Failed to generate image for ${dishName} after ${maxRetries} attempts.`);
+            imgElement.src = `https://placehold.co/600x400/CCCCCC/333333?text=Image+Not+Available&font=inter`; // Placeholder if generation fails
+            imgElement.alt = `${dishName} - Image Not Available`;
+            imgElement.classList.remove('hidden');
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        }
+
+        function createMenuItemCard(item) {
+            // Validate required fields
+            if (!item.Title || !item.PriceString || !item.ImageDishName || !item.ImageDishDescription || !item.CategoryID) {
+                console.warn('Skipping item due to missing critical data:', item);
+                return null;
+            }
+
+            const card = document.createElement('div');
+            card.className = 'menu-item-card';
+
+            const subtitleText = item.Subtitle ? item.Subtitle.toString() : '';
+            const titleText = item.Title ? item.Title.toString() : 'Unnamed Item';
+            const priceText = item.PriceString ? item.PriceString.toString() : 'N/A';
+            const imageDishNameText = item.ImageDishName ? item.ImageDishName.toString() : titleText;
+            const imageDishDescriptionText = item.ImageDishDescription ? item.ImageDishDescription.toString() : 'A delicious dish.';
+
+
+            card.innerHTML = `
+                <div class="image-container">
+                    <img src="" alt="${imageDishNameText}" class="w-full h-full object-cover hidden">
+                    <div class="spinner-container">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div class="p-6 menu-item-content">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-1">${titleText}</h3>
+                        ${subtitleText ? `<p class="text-sm text-gray-600 mb-3">${subtitleText}</p>` : ''}
+                        <p class="text-gray-700 text-sm mb-4 leading-relaxed">${imageDishDescriptionText}</p>
+                    </div>
+                    <div class="flex justify-between items-center mt-auto pt-4">
+                        <span class="text-3xl font-extrabold price-tag">${priceText}</span>
+                    </div>
+                </div>
+            `;
+
+            const imgElement = card.querySelector('img');
+            // Defer image generation slightly to allow DOM update
+            setTimeout(() => {
+                generateAndSetImage(imgElement, imageDishNameText, imageDishDescriptionText);
+            }, 100);
+
+
+            return card;
+        }
+
+        async function fetchAndDisplayMenu() {
+            if (SPREADSHEET_URL === 'https://docs.google.com/spreadsheets/d/1HNm22LQX2oAmmfX-AYbDksWGHnKJolVcVhmMF6-RzKw/edit?pli=1&gid=2125992667#gid=2125992667' || !SPREADSHEET_URL) {
+                // Display error in all categories
+                document.querySelectorAll('.category-grid').forEach(grid => {
+                    grid.innerHTML = '<p class="col-span-full text-center text-red-600 font-bold">Error: Spreadsheet URL not configured.</p>';
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch(SPREADSHEET_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const menuItems = await response.json();
+                if (menuItems.error) {
+                    console.error("Error from Google Apps Script:", menuItems.error);
+                    document.querySelectorAll('.category-grid').forEach(grid => {
+                        grid.innerHTML = `<p class="col-span-full text-center text-red-600 font-bold">Error fetching menu data: ${menuItems.error}</p>`;
+                    });
+                    return;
+                }
+
+
+                // Clear initial "Loading..." messages
+                document.querySelectorAll('.category-grid').forEach(grid => grid.innerHTML = '');
+
+                const itemsByCategory = {};
+
+                menuItems.forEach(item => {
+                    if (!itemsByCategory[item.CategoryID]) {
+                        itemsByCategory[item.CategoryID] = [];
+                    }
+                    itemsByCategory[item.CategoryID].push(item);
+                });
+
+                for (const categoryId in itemsByCategory) {
+                    const categoryContainer = document.getElementById(categoryId);
+                    if (categoryContainer) {
+                        const grid = categoryContainer.querySelector('.category-grid');
+                        if (grid) {
+                            if (itemsByCategory[categoryId].length === 0) {
+                                grid.innerHTML = '<p class="col-span-full text-center text-gray-600">No items in this category yet.</p>';
+                            } else {
+                                itemsByCategory[categoryId].forEach(item => {
+                                    const card = createMenuItemCard(item);
+                                    if (card) {
+                                        grid.appendChild(card);
+                                    }
+                                });
+                            }
+                        } else {
+                            console.warn(`No .category-grid found in section #${categoryId}`);
+                        }
+                    } else {
+                        console.warn(`Category section #${categoryId} not found in HTML.`);
+                    }
+                }
+                   // Check if any categories were populated, if not, display a general message
+                let populated = false;
+                document.querySelectorAll('.category-grid').forEach(grid => {
+                    if (grid.children.length > 0 && !(grid.children.length === 1 && grid.children[0].textContent.includes("No items"))) {
+                        populated = true;
+                    }
+                });
+
+                if (!populated && menuItems.length > 0) {
+                    // This case means there was data, but no matching CategoryID found in HTML,
+                    // or createMenuItemCard returned null for all of them.
+                    // Errors would have been logged by createMenuItemCard or category checks.
+                    console.warn("Menu data was fetched, but no items were displayed. Check CategoryIDs in spreadsheet match HTML section IDs and item data is complete.");
+                } else if (menuItems.length === 0) {
+                    document.querySelectorAll('.category-grid').forEach(grid => {
+                        grid.innerHTML = '<p class="col-span-full text-center text-gray-600">The menu is currently empty. Please add items to the spreadsheet.</p>';
+                    });
+                }
+
+
+            } catch (error) {
+                console.error('Failed to fetch or display menu:', error);
+                document.querySelectorAll('.category-grid').forEach(grid => {
+                    grid.innerHTML = `<p class="col-span-full text-center text-red-600 font-bold">Could not load menu: ${error.message}</p>`;
+                });
+            }
+        }
+
+        window.onload = function() {
+            fetchAndDisplayMenu();
+        };
+    </script>
+</body>
+</html>
